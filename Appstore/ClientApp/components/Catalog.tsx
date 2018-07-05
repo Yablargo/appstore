@@ -10,7 +10,17 @@ type CatalogProps =
     & typeof CatalogState.actionCreators      // ... plus action creators we've requested
     & RouteComponentProps<{ filter: string }>; // ... plus incoming routing parameters
 
-class Catalog extends React.Component<CatalogProps, {}> {
+class Catalog extends React.Component<CatalogProps, {search: string }> {
+
+    constructor() {
+        super();
+        this.state = {
+            search: 'Filter',
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
     componentWillMount() {
         // This method runs when the component is first added to the page
         let filter = this.props.match.params.filter;
@@ -26,12 +36,18 @@ class Catalog extends React.Component<CatalogProps, {}> {
 
     public render()
     {
-        return <div>
-            <h1>Duh Catalog</h1>
-            <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
-            {this.renderCatalogTable()}
-        </div>;
+        return (
+            <div>
+                <h1>Duh Catalog</h1>
+                <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
+                <input type="text" value={this.state.search} onChange={this.handleChange} />
+
+                {this.renderCatalogTable()}
+            </div>
+        );
+
     }
+
     private renderCatalogTable() {
         return <ul className='catalog'>
             
@@ -42,6 +58,14 @@ class Catalog extends React.Component<CatalogProps, {}> {
                 </li>
             )}
         </ul>;
+    }
+
+    handleChange(event) {
+        this.setState(
+            {
+                search: event.target.value,
+            });
+        console.log(this.state.search);
     }
 
     /*
