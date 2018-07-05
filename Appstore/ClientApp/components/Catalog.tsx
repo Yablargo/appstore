@@ -16,7 +16,10 @@ class Catalog extends React.Component<CatalogProps, {search: string }> {
         // This method runs when the component is first added to the page
 
         //Set the search text to either be blank or a previous input if tabs were switched
-        this.state = {
+        
+        //this.setState();
+        
+        this.state={
             search: this.props.match.params.search ||  undefined
         };
         console.log("My state is: [" + this.state.search +"]");
@@ -28,8 +31,8 @@ class Catalog extends React.Component<CatalogProps, {search: string }> {
 
     componentWillReceiveProps(nextProps: CatalogProps) {
         // This method runs when incoming props (e.g., route params) change
-        let filter = nextProps.match.params.search;
-        this.props.requestCatalog(filter);
+        
+        this.props.requestCatalog(this.state.search);
     }
 
     public render()
@@ -49,7 +52,6 @@ class Catalog extends React.Component<CatalogProps, {search: string }> {
         console.log("My catalog: " );
         console.log(this.props.catalog);
         return <ul className='catalog'>
-            
             {this.props.catalog.map(catalog =>
                 <li key = { catalog.id}>
                     <h1>{catalog.title}</h1>
@@ -60,17 +62,18 @@ class Catalog extends React.Component<CatalogProps, {search: string }> {
     }
 
     //Update the search filter
+
     handleChange(event) {
 
         //Probably debounce here
-        
         this.setState(
             {
                 search: event.target.value,
             });
+
+        //Request catalog based on filter      
         this.props.requestCatalog(this.state.search);
-        //Request catalog based on filter        
-    }
+}
 
     /*
     private renderPagination() {

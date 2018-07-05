@@ -19,6 +19,8 @@ namespace Appstore.Controllers
         [HttpGet("[action]")] 
         public ICollection<CatalogEntry> Search(string filter)        
         {
+            filter = filter ?? "";
+            
             List<CatalogEntry> results = new List<CatalogEntry>();
             //super gross, JSONify each object, and see if the string is present
             //TODO: Make pretty
