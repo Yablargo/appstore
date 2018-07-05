@@ -14,6 +14,7 @@ class Catalog extends React.Component<CatalogProps, {}> {
     componentWillMount() {
         // This method runs when the component is first added to the page
         let filter = this.props.match.params.filter;
+        filter = "";
         this.props.requestCatalog(filter);
     }
 

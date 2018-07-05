@@ -46,10 +46,11 @@ export const actionCreators = {
     requestCatalog: (filter: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
         if (filter !== getState().catalogEntries.filter) {
-            let fetchTask = fetch(`api/Catalog/Search/filter?=${ filter }`)
+            let fetchTask = fetch(`api/Catalog/Search?filter=${ filter }`)
                 .then(response => response.json() as Promise<CatalogEntry[]>)
                 .then(data => {
                     dispatch({ type: 'RECEIVE_CATALOG', filter: filter, catalog: data });
+                    console.log(data);
                 });
 
             addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
@@ -76,6 +77,10 @@ export const reducer: Reducer<CatalogState> = (state: CatalogState, incomingActi
         case 'RECEIVE_CATALOG':
             // Only accept the incoming data if it matches the most recent request. This ensures we correctly
             // handle out-of-order responses.
+            console.log("Action:");
+            console.log(action.filter);
+            console.log("State:");
+            console.log(state.filter);
             if (action.filter === state.filter) {
                 return {
                     //startDateIndex: action.startDateIndex,
