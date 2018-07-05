@@ -14,22 +14,11 @@ namespace Appstore.Controllers
     {
         public List<CatalogEntry> Entries;
 
-        public class CatalogState
-        {
-           public ICollection<CatalogEntry> Data {get;set;}
-           public string Filter {get;set;}
-        }
-
         // GET: api/<controller>/search/counter-strike        
         [HttpGet("[action]")] 
-        public CatalogState Search(string filter)        
+        public ICollection<CatalogEntry> Search(string filter)        
         {
-            return new CatalogState {
-                Data = Entries,
-                Filter = filter
-
-            };
-            
+            return Entries;
         }
 
         // GET api/<controller>/5

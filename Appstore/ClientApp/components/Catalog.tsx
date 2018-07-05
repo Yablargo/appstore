@@ -4,7 +4,6 @@ import { ApplicationState } from '../store';
 import * as CatalogState from '../store/GameCatalog';
 import { connect } from 'react-redux';
 
-
 // At runtime, Redux will merge together...
 type CatalogProps =
     CatalogState.CatalogState        // ... state we've requested from the Redux store
@@ -17,7 +16,6 @@ class Catalog extends React.Component<CatalogProps, {}> {
         let filter = this.props.match.params.filter;
         this.props.requestCatalog(filter);
     }
-
 
     componentWillReceiveProps(nextProps: CatalogProps) {
         // This method runs when incoming props (e.g., route params) change

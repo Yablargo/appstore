@@ -41,6 +41,7 @@ type KnownAction = RequestWeatherForecastsAction | ReceiveWeatherForecastsAction
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
+
 export const actionCreators = {
     requestWeatherForecasts: (startDateIndex: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
