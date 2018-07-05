@@ -1,10 +1,12 @@
 import * as WeatherForecasts from './WeatherForecasts';
 import * as Counter from './Counter';
+import * as GameCatalog from './GameCatalog';
 
 // The top-level state object
 export interface ApplicationState {
     counter: Counter.CounterState;
     weatherForecasts: WeatherForecasts.WeatherForecastsState;
+    catalogEntries: GameCatalog.CatalogState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using

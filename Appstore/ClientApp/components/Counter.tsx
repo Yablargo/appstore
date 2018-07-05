@@ -3,7 +3,6 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ApplicationState }  from '../store';
 import * as CounterStore from '../store/Counter';
-import * as WeatherForecasts from '../store/WeatherForecasts';
 
 type CounterProps =
     CounterStore.CounterState

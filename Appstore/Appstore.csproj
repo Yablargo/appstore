@@ -22,10 +22,12 @@
 
   <ItemGroup>
     <None Remove="ClientApp\components\Catalog.tsx" />
+    <None Remove="ClientApp\store\GameCatalog.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\components\Catalog.tsx" />
+    <TypeScriptCompile Include="ClientApp\store\GameCatalog.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
