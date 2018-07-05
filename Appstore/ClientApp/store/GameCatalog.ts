@@ -9,6 +9,7 @@ export interface CatalogState {
     isLoading: boolean;
     filter: string;
     catalog: CatalogEntry[];
+
 }
 
 export interface CatalogEntry {
@@ -44,17 +45,19 @@ type KnownAction = RequestCatalogAction | ReceiveCatalogAction;
 
 export const actionCreators = {
     requestCatalog: (filter: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        console.log(getState());
         // Only load data if it's something we don't already have (and are not already loading)
         if (filter !== getState().catalogEntries.filter) {
             let fetchTask = fetch(`api/Catalog/Search?filter=${ filter }`)
                 .then(response => response.json() as Promise<CatalogEntry[]>)
                 .then(data => {
                     dispatch({ type: 'RECEIVE_CATALOG', filter: filter, catalog: data });
-                    console.log(data);
+                    
                 });
 
             addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
             dispatch({ type: 'REQUEST_CATALOG', filter: filter });
+
         }
     }
 };
@@ -71,18 +74,14 @@ export const reducer: Reducer<CatalogState> = (state: CatalogState, incomingActi
             return {
                 //startDateIndex: action.startDateIndex,
                 catalog: state.catalog,
-                filter: state.filter,
+                filter: action.filter,
                 isLoading: true
             };
         case 'RECEIVE_CATALOG':
             // Only accept the incoming data if it matches the most recent request. This ensures we correctly
-            // handle out-of-order responses.
-            console.log("Action:");
-            console.log(action.filter);
-            console.log("State:");
-            console.log(state.filter);
+            // handle out-of-order responses.           
             if (action.filter === state.filter) {
-                return {
+                return {                    
                     //startDateIndex: action.startDateIndex,
                     catalog: action.catalog,
                     filter: action.filter,

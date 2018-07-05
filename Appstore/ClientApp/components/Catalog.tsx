@@ -8,29 +8,27 @@ import { connect } from 'react-redux';
 type CatalogProps =
     CatalogState.CatalogState        // ... state we've requested from the Redux store
     & typeof CatalogState.actionCreators      // ... plus action creators we've requested
-    & RouteComponentProps<{ filter: string }>; // ... plus incoming routing parameters
+    & RouteComponentProps<{ search: string }>; // ... plus incoming routing parameters
 
 class Catalog extends React.Component<CatalogProps, {search: string }> {
 
-    constructor() {
-        super();
-        this.state = {
-            search: 'Filter',
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-    }
-
     componentWillMount() {
         // This method runs when the component is first added to the page
-        let filter = this.props.match.params.filter;
-        filter = "";
-        this.props.requestCatalog(filter);
+
+        //Set the search text to either be blank or a previous input if tabs were switched
+        this.state = {
+            search: this.props.match.params.search ||  undefined
+        };
+        console.log("My state is: [" + this.state.search +"]");
+
+        this.handleChange = this.handleChange.bind(this);
+
+        this.props.requestCatalog(this.state.search);
     }
 
     componentWillReceiveProps(nextProps: CatalogProps) {
         // This method runs when incoming props (e.g., route params) change
-        let filter = nextProps.match.params.filter;
+        let filter = nextProps.match.params.search;
         this.props.requestCatalog(filter);
     }
 
@@ -45,10 +43,11 @@ class Catalog extends React.Component<CatalogProps, {search: string }> {
                 {this.renderCatalogTable()}
             </div>
         );
-
     }
 
     private renderCatalogTable() {
+        console.log("My catalog: " );
+        console.log(this.props.catalog);
         return <ul className='catalog'>
             
             {this.props.catalog.map(catalog =>
@@ -57,15 +56,20 @@ class Catalog extends React.Component<CatalogProps, {search: string }> {
                     <p>{catalog.description}</p>
                 </li>
             )}
-        </ul>;
+        </ul>
     }
 
+    //Update the search filter
     handleChange(event) {
+
+        //Probably debounce here
+        
         this.setState(
             {
                 search: event.target.value,
             });
-        console.log(this.state.search);
+        this.props.requestCatalog(this.state.search);
+        //Request catalog based on filter        
     }
 
     /*
@@ -81,7 +85,6 @@ class Catalog extends React.Component<CatalogProps, {search: string }> {
     }
     */
 }
-
 
 export default connect(
     (state: ApplicationState) => state.catalogEntries, // Selects which state properties are merged into the component's props
