@@ -8,31 +8,22 @@ import { connect } from 'react-redux';
 type CatalogProps =
     CatalogState.CatalogState        // ... state we've requested from the Redux store
     & typeof CatalogState.actionCreators      // ... plus action creators we've requested
-    & RouteComponentProps<{ search: string }>; // ... plus incoming routing parameters
+    & RouteComponentProps<{ filter: string }>; // ... plus incoming routing parameters
 
-class Catalog extends React.Component<CatalogProps, {search: string }> {
+class Catalog extends React.Component<CatalogProps, {search: string}> {
 
-    componentWillMount() {
-        // This method runs when the component is first added to the page
-
-        //Set the search text to either be blank or a previous input if tabs were switched
-        
-        //this.setState();
-        
-        this.state={
-            search: this.props.match.params.search ||  undefined
+    constructor(props) {
+        super(props);
+        this.state =
+        {
+            search: this.props.match.params.filter ||  ' '
         };
-        console.log("My state is: [" + this.state.search +"]");
-
         this.handleChange = this.handleChange.bind(this);
-
-        this.props.requestCatalog(this.state.search);
     }
 
     componentWillReceiveProps(nextProps: CatalogProps) {
         // This method runs when incoming props (e.g., route params) change
-        
-        this.props.requestCatalog(this.state.search);
+        //this.props.requestCatalog(this.state.search);
     }
 
     public render()
@@ -49,8 +40,11 @@ class Catalog extends React.Component<CatalogProps, {search: string }> {
     }
 
     private renderCatalogTable() {
-        console.log("My catalog: " );
-        console.log(this.props.catalog);
+
+        //console.log("My catalog: " );
+        //console.log(this.props.catalog);
+        console.log("Current state: " + this.props.filter);
+
         return <ul className='catalog'>
             {this.props.catalog.map(catalog =>
                 <li key = { catalog.id}>
@@ -69,11 +63,8 @@ class Catalog extends React.Component<CatalogProps, {search: string }> {
         this.setState(
             {
                 search: event.target.value,
-            });
-
-        //Request catalog based on filter      
-        this.props.requestCatalog(this.state.search);
-}
+            });  
+    }
 
     /*
     private renderPagination() {
