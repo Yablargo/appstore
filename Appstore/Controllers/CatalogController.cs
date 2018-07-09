@@ -19,20 +19,17 @@ namespace Appstore.Controllers
         [HttpGet("[action]")] 
         public ICollection<CatalogEntry> Search(string filter)        
         {
-            filter = filter ?? "";
+            filter = (filter ?? "").ToLower();
             
             List<CatalogEntry> results = new List<CatalogEntry>();
             //super gross, JSONify each object, and see if the string is present
             //TODO: Make pretty
             foreach(var entry in Entries)
             {                
-                string theJson = JsonConvert.SerializeObject(entry);
-                //?????? worky?string theJson = JsonConvert.ToString(entry); 
-                //grossest ever
-                if(theJson.ToLower().Contains(filter.ToString()))
-                {
-                    results.Add(entry);
-                }
+               if(entry.Title.ToLower().Contains(filter) || entry.Description.ToLower().Contains(filter))
+               {
+                   results.Add(entry);
+               }
             }            
             return results;
         }

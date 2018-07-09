@@ -16,9 +16,10 @@ class Catalog extends React.Component<CatalogProps, {search: string}> {
         super(props);
         this.state =
         {
-            search: this.props.match.params.filter ||  ' '
+            search: this.props.match.params.filter ||  ''
         };
         this.handleChange = this.handleChange.bind(this);
+        this.props.requestCatalog('INITIAL_SEARCH');
     }
 
     componentWillReceiveProps(nextProps: CatalogProps) {
@@ -43,7 +44,7 @@ class Catalog extends React.Component<CatalogProps, {search: string}> {
 
         //console.log("My catalog: " );
         //console.log(this.props.catalog);
-        console.log("Current state: " + this.props.filter);
+        console.log("Current state: " + this.state.search);
 
         return <ul className='catalog'>
             {this.props.catalog.map(catalog =>
@@ -64,6 +65,8 @@ class Catalog extends React.Component<CatalogProps, {search: string}> {
             {
                 search: event.target.value,
             });  
+        
+        this.props.requestCatalog(this.state.search);
     }
 
     /*
