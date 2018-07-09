@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 type CatalogProps =
     CatalogState.CatalogState        // ... state we've requested from the Redux store
     & typeof CatalogState.actionCreators      // ... plus action creators we've requested
-    & RouteComponentProps<{ filter: string }>; // ... plus incoming routing parameters
+    & RouteComponentProps<{ filter: string, currentEntry: CatalogState.CatalogEntry }>; // ... plus incoming routing parameters
 
 class Catalog extends React.Component<CatalogProps, {search: string}> {
 
@@ -19,12 +19,10 @@ class Catalog extends React.Component<CatalogProps, {search: string}> {
             search: this.props.match.params.filter ||  ''
         };
         this.handleChange = this.handleChange.bind(this);
-        this.props.requestCatalog('INITIAL_SEARCH');
-    }
+        this.showDetails = this.showDetails.bind(this);
 
-    componentWillReceiveProps(nextProps: CatalogProps) {
-        // This method runs when incoming props (e.g., route params) change
-        //this.props.requestCatalog(this.state.search);
+        this.props.requestCatalog('INITIAL_SEARCH');
+        this.props.requestEntry('INITIAL_ENTRY');
     }
 
     public render()
@@ -34,32 +32,37 @@ class Catalog extends React.Component<CatalogProps, {search: string}> {
                 <h1>Duh Catalog</h1>
                 <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
                 <input type="text" value={this.state.search} onChange={this.handleChange} />
-
                 {this.renderCatalogTable()}
             </div>
         );
     }
 
     private renderCatalogTable() {
-
-        //console.log("My catalog: " );
-        //console.log(this.props.catalog);
-        console.log("Current state: " + this.state.search);
-
         return <ul className='catalog'>
             {this.props.catalog.map(catalog =>
-                <li key = { catalog.id}>
+                <li key = {catalog.id} onClick={() => this.showDetails(catalog.id)}>
                     <h1>{catalog.title}</h1>
-                    <p>{catalog.description}</p>
+                    <p>{catalog.description}</p>     
                 </li>
             )}
         </ul>
     }
 
-    //Update the search filter
+    showDetails(id)
+    {
+        this.props.requestEntry(id);
+      
+        
+        //These logs seem to complete before the requestEntry does
+        //Meaning currentEntry will still be undefined here
+        console.log("Current Entry:");
+        console.log(this.props.currentEntry);
+
+        this.props.history.push(`catalog-entry/${id}`);
+        
+    }
 
     handleChange(event) {
-
         //Probably debounce here
         this.setState(
             {
@@ -69,18 +72,6 @@ class Catalog extends React.Component<CatalogProps, {search: string}> {
         this.props.requestCatalog(this.state.search);
     }
 
-    /*
-    private renderPagination() {
-        let prevStartDateIndex = (this.props.startDateIndex || 0) - 5;
-        let nextStartDateIndex = (this.props.startDateIndex || 0) + 5;
-
-        return <p className='clearfix text-center'>
-            <Link className='btn btn-default pull-left' to={ `/fetchdata/${ prevStartDateIndex }` }>Previous</Link>
-            <Link className='btn btn-default pull-right' to={ `/fetchdata/${ nextStartDateIndex }` }>Next</Link>
-            { this.props.isLoading ? <span>Loading...</span> : [] }
-        </p>;
-    }
-    */
 }
 
 export default connect(

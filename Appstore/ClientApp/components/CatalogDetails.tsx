@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 type CatalogDetailsProps =
     CatalogState.CatalogState        // ... state we've requested from the Redux store
     & typeof CatalogState.actionCreators      // ... plus action creators we've requested
-    & RouteComponentProps<{ filter: string }>; // ... plus incoming routing parameters
+    & RouteComponentProps<{ currentEntry: CatalogState.CatalogEntry }>; // ... plus incoming routing parameters
 
 class CatalogDetails extends React.Component<CatalogDetailsProps, {}> {
 
@@ -15,17 +15,12 @@ class CatalogDetails extends React.Component<CatalogDetailsProps, {}> {
         super(props);
     }
 
-    componentWillReceiveProps(nextProps: CatalogDetailsProps) {
-        // This method runs when incoming props (e.g., route params) change
-        //this.props.requestCatalog(this.state.search);
-    }
-
     public render()
     {
         return (
             <div>
-                <h1>Catalog Entry</h1>
-
+                <h1>{this.props.currentEntry.title}</h1>
+                <p>{this.props.currentEntry.description}</p>
             </div>
         );
     }

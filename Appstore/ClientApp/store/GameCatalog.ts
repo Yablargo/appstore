@@ -79,9 +79,12 @@ export const actionCreators = {
             let fetchTask = fetch(`api/Catalog/${ id }`)
             .then(reponse => reponse.json() as Promise<CatalogEntry>)
             .then(data => {
+                console.log(data);
+                console.log(this.state.currentEntry);
                 dispatch( {type: 'RECEIVE_ENTRY', currentEntry: data});
-            });
 
+            });
+           
             addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
             dispatch({ type: 'REQUEST_ENTRY', id: id});
         }
@@ -127,14 +130,16 @@ export const reducer: Reducer<CatalogState> = (state: CatalogState, incomingActi
                 isLoading: true
             };
         case 'RECEIVE_ENTRY':
-            return {
-                catalog: state.catalog,
-                filter: state.filter,
-                id: state.id,
-                currentEntry: action.currentEntry,
-                isLoading: false
-            };
-            
+            if ( action.currentEntry.id === "INITIAL_ENTRY" || action.currentEntry === state.currentEntry) {    
+                return {
+                    catalog: state.catalog,
+                    filter: state.filter,
+                    id: state.id,
+                    currentEntry: action.currentEntry,
+                    isLoading: false
+             };
+            }
+            break;
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
             const exhaustiveCheck: never = action;
